@@ -1,35 +1,61 @@
-import pandas as pd
-import yaml
-from pathlib import Path
 from datetime import datetime
-from metadata.metadata_store import MetadataStore, MetadataEntry
+from pathlib import Path
+
+import yaml
+
+from metadata.metadata_store import MetadataEntry, MetadataStore
+from scripts.ingestion.download_utils import download_file, load_csv, load_xlsx
 
 REGISTRY = Path("registry/transition_risk_sources.yaml")
+
 
 def load_registry():
     with REGISTRY.open("r") as f:
         return yaml.safe_load(f)["datasets"]
 
+
 def ingest_all_sources():
     datasets = load_registry()
     store = MetadataStore()
+    loaded_data = {}
 
-    for ds in datasets:
-        dataset_id = ds["id"]
-        raw_dir = Path(f"data/raw/{dataset_id}")
+    for dataset in datasets:
+        dataset_id = dataset["id"]
+        dataset_format = dataset.get("format", "").lower()
+        url = dataset["url"]
+
+        if dataset_format == "csv":
+            loader = load_csv
+        elif dataset_format == "xlsx":
+            loader = load_xlsx
+        else:
+            raise ValueError(f"Unsupported dataset format: {dataset_format}")
+
+        timestamp = datetime.utcnow()
+        timestamp_str = timestamp.strftime("%Y%m%dT%H%M%SZ")
+
+        raw_dir = Path("data/raw") / dataset_id
         raw_dir.mkdir(parents=True, exist_ok=True)
 
-        # Placeholder ingestion logic
-        df = pd.DataFrame({"area_code": ["A"], "value": [1]})
-        out_path = raw_dir / "latest.csv"
-        df.to_csv(out_path, index=False)
+        timestamp_path = raw_dir / f"{timestamp_str}.{dataset_format}"
+        latest_path = raw_dir / f"latest.{dataset_format}"
 
-        store.append(MetadataEntry(
-            dataset_id=dataset_id,
-            event="ingested",
-            timestamp=datetime.utcnow().isoformat(),
-            details={"path": str(out_path)}
-        ))
+        download_file(url, timestamp_path)
+        latest_path.write_bytes(timestamp_path.read_bytes())
 
-    return True
+        df = loader(timestamp_path)
+        loaded_data[dataset_id] = df
 
+        store.append(
+            MetadataEntry(
+                dataset_id=dataset_id,
+                event="ingested",
+                timestamp=timestamp.isoformat(),
+                details={
+                    "file_path": str(timestamp_path),
+                    "status": "success"
+                },
+            )
+        )
+
+    return loaded_data
