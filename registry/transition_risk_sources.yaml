@@ -1,0 +1,162 @@
+datasets:
+
+  # --------------------------------------------------------------------
+  # 1. INDUSTRIAL EXPOSURE
+  # --------------------------------------------------------------------
+
+  - id: bres
+    description: Business Register and Employment Survey (industry structure)
+    source: NOMIS
+    url: "https://www.nomisweb.co.uk/api/v01/dataset/bres/table.csv?time=2023&geography=TYPE469&industry=total&measure=0"
+    geography: LAD
+    update_frequency: annual
+    format: csv
+    notes: "Industry composition; core for transition exposure scoring."
+    expected_schema: []
+
+  - id: idbr_business_counts
+    description: UK business activity, size and location aggregates (IDBR)
+    source: ONS
+    url: "https://www.ons.gov.uk/businessindustryandtrade/business/activitysizeandlocation/datasets/ukbusinessactivitysizeandlocation"
+    geography: LAD
+    update_frequency: annual
+    format: xlsx
+    notes: "Firm counts by sector; SME exposure."
+    expected_schema: []
+
+
+  # --------------------------------------------------------------------
+  # 2. EMPLOYMENT & SKILLS VULNERABILITY
+  # --------------------------------------------------------------------
+
+  - id: aps
+    description: Annual Population Survey
+    source: NOMIS
+    url: "https://www.nomisweb.co.uk/api/v01/dataset/aps/table.csv?time=2023&geography=TYPE469&sex=0&age=0&measure=0"
+    geography: LAD
+    update_frequency: quarterly
+    format: csv
+    notes: "Skills, qualifications, labour market vulnerability."
+    expected_schema: []
+
+  - id: lfs
+    description: Labour Force Survey (local labour market structure)
+    source: NOMIS
+    url: "https://www.nomisweb.co.uk/api/v01/dataset/lfs/table.csv?time=2023&geography=TYPE469"
+    geography: LAD
+    update_frequency: quarterly
+    format: csv
+    notes: "Occupation, skills, employment patterns."
+    expected_schema: []
+
+  - id: skills_apprenticeships
+    description: Apprenticeships and skills datasets (ESFA)
+    source: DfE / ESFA
+    url: "https://skillsfunding.service.gov.uk/data-files"
+    geography: LAD
+    update_frequency: quarterly
+    format: csv
+    notes: "Training readiness, apprenticeships uptake."
+    expected_schema: []
+
+
+  # --------------------------------------------------------------------
+  # 3. GREEN TRANSITION READINESS
+  # --------------------------------------------------------------------
+
+  - id: lcree
+    description: Low Carbon & Renewable Energy Economy (green jobs & turnover)
+    source: ONS
+    url: "https://www.ons.gov.uk/economy/environmentalaccounts/datasets/lowcarbonandrenewableenergyeconomy"
+    geography: region
+    update_frequency: annual
+    format: xlsx
+    notes: "Core measure of green jobs and transition readiness."
+    expected_schema: []
+
+  - id: rnd_expenditure
+    description: UK business enterprise R&D expenditure (green innovation signals)
+    source: DSIT / ONS
+    url: "https://www.gov.uk/government/statistics/uk-business-enterprise-research-and-development"
+    geography: region
+    update_frequency: annual
+    format: xlsx
+    notes: "Innovation readiness; sectoral R&D intensity."
+    expected_schema: []
+
+
+  # --------------------------------------------------------------------
+  # 4. ENERGY DEPENDENCE & CARBON INTENSITY
+  # --------------------------------------------------------------------
+
+  - id: energy_consumption
+    description: Sub-national total final energy consumption
+    source: DESNZ
+    url: "https://www.gov.uk/government/collections/total-final-energy-consumption-at-sub-national-level"
+    geography: LAD
+    update_frequency: annual
+    format: xlsx
+    notes: "Energy dependency and consumption profiles."
+    expected_schema: []
+
+  - id: la_co2_emissions
+    description: Local Authority CO₂ emissions (territorial)
+    source: DESNZ
+    url: "https://www.gov.uk/government/collections/uk-local-authority-and-regional-carbon-dioxide-emissions-national-statistics"
+    geography: LAD
+    update_frequency: annual
+    format: xlsx
+    notes: "Carbon intensity; fossil-fuel dependency and vulnerability."
+    expected_schema: []
+
+  - id: grid_mix
+    description: Regional electricity generation mix
+    source: National Grid ESO
+    url: "https://data.nationalgrideso.com/system/region-generation-mix"
+    geography: region
+    update_frequency: daily
+    format: csv
+    notes: "Real-time grid mix; renewable share; transition readiness."
+    expected_schema: []
+
+
+  # --------------------------------------------------------------------
+  # 5. SOCIO-ECONOMIC RESILIENCE
+  # --------------------------------------------------------------------
+
+
+  - id: imd
+    description: Index of Multiple Deprivation
+    source: MHCLG
+    url: "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019"
+    geography: LSOA
+    update_frequency: multi-year
+    format: xlsx
+    notes: "Socio-economic vulnerability; weighting factor for transition risk."
+    expected_schema: []
+
+  - id: population_estimates
+    description: ONS population estimates (denominator data)
+    source: ONS
+    url: "https://www.ons.gov.uk/datasets/population-estimates"
+    geography: LAD
+    update_frequency: annual
+    format: xlsx
+    notes: "Population base for normalisation and per-capita indicators."
+    expected_schema: []
+
+
+  # --------------------------------------------------------------------
+  # 6. GEOSPATIAL HARMONISATION
+  # --------------------------------------------------------------------
+
+  - id: ons_geo_lookups
+    description: ONS geography codes and lookup tables
+    source: ONS
+    url: "https://www.ons.gov.uk/methodology/geopgraphy/geographicalproducts/namescodesandlookups"
+    geography: LAD/MSOA/LSOA
+    update_frequency: irregular
+    format: csv
+    notes: "Essential for LAD/MSOA/LSOA harmonisation."
+    expected_schema: []
+
